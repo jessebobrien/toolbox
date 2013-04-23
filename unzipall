@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for f in $(ls)
+	do
+		unzip $f
+	done

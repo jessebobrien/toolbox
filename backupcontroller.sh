@@ -9,7 +9,7 @@
 # Edit values below to change the behavior of this script
 
 SOURCE="/home/jobrien/Development/"
-DESTINATION="/home/jobrien/Development/backup/"
+DESTINATION="/home/jobrien/backup"
 HOSTNAME=`hostname -s`
 #Total number of backups to keep
 ROTATIONS=5
@@ -19,7 +19,7 @@ EXCLUDES="lost+found"
 EXCLUDES_FILE="${DESTINATION}/etc/backups.exclude"
 
 # Error email address
-MAILTO="jobrien@culverco.com"
+MAILTO="jesse.b.obrien@gmail.com"
 
 # Generic error when there aren't enough backups
 ERROR="There are fewer than ${ROTATIONS} backup(s) available in ${DESTINATION} on ${HOSTNAME}."
@@ -89,7 +89,7 @@ done
 logger "We have enough disk space, continuing..."
 
 # Current number of Backups available
-NUMBAK=`ls -d ${DESTINATION}/Backups.* | wc -l 2>/dev/null`
+numbak=`ls -d ${DESTINATION}/Backups.* | wc -l 2>/dev/null`
 
 # Rotate the older files
 until [ "${numbak}" -lt "2" ];do
