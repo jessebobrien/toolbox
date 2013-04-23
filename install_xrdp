@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 #! /bin/bash -
 
 # VERSION 1.0
 # Written by Jesse O'Brien, property of ReadyTech copyright 2009
+=======
+#!/bin/bash
+
+# VERSION 1.0
+# Written by Jesse O'Brien
+>>>>>>> afbd923d84135c9aa9f145b86f3e8a1dc2161d71
 # 12/02/2009
 
 # exit on errors, return the last line
@@ -25,7 +32,10 @@ else
 	echo "XRDP does not appear to be installed, proceeding normally."
 fi
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> afbd923d84135c9aa9f145b86f3e8a1dc2161d71
 # determine operating system
 OS=`uname -s`
 REV=`uname -r`
@@ -108,6 +118,9 @@ elif [ "${DIST}" = "SUSE" ] ; then
 else echo "***I don't know how to autostart on " ${OSSTR} "so startup should be configured manually.***"
 fi
 
+<<<<<<< HEAD
 echo 
 echo
+=======
+>>>>>>> afbd923d84135c9aa9f145b86f3e8a1dc2161d71
 echo "Installation complete.  You can test this setup by restarting the machine and logging in using an RDP viewer, or start the service manually using /usr/local/xrdp/xrdp_control.sh start"
