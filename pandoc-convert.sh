@@ -1,9 +1,7 @@
 #!/bin/bash
-<<<<<<< HEAD
 # This is a script to convert markdown-formatted text files to pdf, html, and .docx formatted output files. It depends on LaTeX (for PDF, the xelatex engine appears to support styling the best) and Pandoc (for markdown handling), and should be run when files are changed, or as a cron job for an entire directory.
 
 #file-specific variables
-=======
 # Authored in 2012 by Jesse O'Brien (jesse.b.obrien@gmail.com) to maintain end-user technical manuals and documentation.
 # This is a script to convert markdown-formatted text files to pdf, html, and .docx formatted output files. 
 # It depends on LaTeX (for PDF, the xelatex engine appears to support styling the best) and Pandoc (for markdown handling).
@@ -13,13 +11,11 @@
 # future feature: add usage documentation
 
 # file-specific variables
->>>>>>> afbd923d84135c9aa9f145b86f3e8a1dc2161d71
 sourcefile="$1"
 filename=$(basename "$sourcefile")
 filename="${filename%.*}"
 directory=$(dirname "$sourcefile")
 
-<<<<<<< HEAD
 #script-specific variables (should be abstracted to args, such as --pdf --html --docx or -phd)
 formats="pdf html docx"
 
@@ -46,7 +42,6 @@ do
 	fi
 	echo "Finished converting $sourcefile to $directory/$filename.$format."
 	echo "All files are located in $directory."
-=======
 # script-specific variables (should be abstracted to args, such as --pdf --html --docx or -phd)
 formats="pdf html docx"
 
@@ -73,6 +68,5 @@ do
     fi
     echo "Finished converting $sourcefile to $directory/$filename.$format."
     echo "All files are located in $directory."
->>>>>>> afbd923d84135c9aa9f145b86f3e8a1dc2161d71
 done #ends for loop
 exit

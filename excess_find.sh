@@ -1,0 +1,1 @@
+#!/bin/bash# Tries to identify old files on the system.nice -n 15 find / -type f -size +20000k -mtime +30 -exec ls -lh {} \; | awk '{ print $5 ": " $NF }' > /var/log/excess_files

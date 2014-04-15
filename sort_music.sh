@@ -1,5 +1,4 @@
-#! /bin/bash -
-
+#! /bin/bash
 # toss destination folder contents into 'unsorted' bin
 
 # convert all to ogg

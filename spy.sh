@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create a list of users and direct it to a file.
-cat /etc/passwd |grep bash |grep home | awk -F: '{print $1}' > names.txt
+cat /etc/passwd | grep bash | grep home | awk -F: '{print $1}' > names.txt
 
 # Create an HTML file. This part must be outside the loop. This is a clunky implementation ... replace with if -d file.
 touch user_space.html

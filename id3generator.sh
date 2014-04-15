@@ -1,4 +1,4 @@
-#! /bin/bash -
+#! /bin/bash
 
 for fn in /home/irish/Music/*/*/*.m4a
 	do
