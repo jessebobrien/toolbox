@@ -9,39 +9,36 @@ log='.log'
 #		ImageMagick (http://www.imagemagick.org/script/index.php)
 #		DCRAW (for raw processing)
 
-unset raws
-unset photos
-unset watermarks
-
-getRaws() {
-	#organize raw Nikon photo files
+function getRaws() {
+	# organize raw Nikon photo files
+    # should handle more than just Nikon files.
 	raws=echo ls ./original | grep '.nef' #Nikon raw
 	return 0
 }
 
-getPhotos() {
-	#organize all (png-only) photos to be processed
+function getPhotos() {
+	# organize all (png-only) photos to be processed
 	photos=echo ls ./original | grep '.png'
 	photos+=echo ls ./original | grep '.jpg'
 	photos+=echo ls ./original | grep '.cr2' #Canon raw
 	return 0
 }
 
-getWatermarks() {
-	#organize all watermark files
+function getWatermarks() {
+	# organize all watermark files into one variable
 	watermarks=echo ls ./Watermarks | grep '.png'
 	return 0
 }
 
-convertRAW() {
-	#process RAW Nikon (NEF) files to png for further processing
+function convertRAW() {
+	# process RAW Nikon (NEF) files to png for further processing
 	pngname=${source%.*}
 	echo "converting $pngname to png format" >> $log
 	dcraw -c6w ./original/$source | pnmtopng > ./original/$pngname.png
 }
 
-processWeb() {
-	#process .png photos for the web
+function processWeb() {
+	# process .png photos for the web
 	photoname=${photo%.*}
 	echo "		$photoname | web effects and resizing" >> $log
 	convert -normalize -noise 3 -monitor -background black -adaptive-resize 1280 -adaptive-sharpen 9x3 -sigmoidal-contrast 3x45% -vignette 400x200-150-150 "./original/$photo" "./processed/web_${photoname}.png"
@@ -55,51 +52,55 @@ processWeb() {
 	return 0
 }
 
-processPrint() {
+function processPrint() {
 	photoname=${photo%.*}
 	echo "		$photoname | print effects and resizing" >> $log
 	convert -normalize -noise 5 -monitor -background black -sigmoidal-contrast 8x45% -vignette 1000x500-500-500 "./original/$photo" "./processed/print_${photoname}.png"
-	gimp -idb '(elsamuko-national-geographic-batch "./processed/print_${photoname}.png" 60 1 60 25 0.4 1 0)' -b '(gimp-quit 0)'
-	echo "$photoname | National Geographic Effect: complete" >> $log
+	# gimp -idb '(elsamuko-national-geographic-batch "./processed/print_${photoname}.png" 60 1 60 25 0.4 1 0)' -b '(gimp-quit 0)'
 	return 0
 }
 
-sign() {
+function sign() {
+    # add signature to image
+
 	markname=${watermark%.*}
 	composite -gravity south ./Watermarks/$watermark "./processed/web_${photoname}.png" "./processed/${photoname}_${markname}.png"
 	echo "		$markname | added to $photoname" >> $log
 	if [ -z "$photographer" ];
 		then do
-			convert ./processed/${photoname}_${markname}.png -font /usr/share/fonts/truetype/Haettenschweiler.ttf -pointsize 32 -gravity southeast -fill white -annotate +5+5 "© 2012 Driven Daily\nPhoto: $photographer" ./processed/${photoname}_${markname}.png
-			echo "		Photo credit added to $photoname" >> $log
+			convert ./processed/${photoname}_${markname}.png -font /usr/share/fonts/truetype/Haettenschweiler.ttf -pointsize 32 -gravity southeast -fill white -annotate +5+5 "© $(date +%Y www.driven-daily.com\nPhoto: $photographer" ./processed/${photoname}_${markname}.png
 		done;
 	fi
 	return 0
 }
 
-housekeeping() {
-	#clean your room!
+function housekeeping() {
+	# clean your room!
 	rm -r ./.working_dir
 	echo "Finished cleanup. Enjoy your processed photos!" >> $log
 	exit 0
 }
 
+# clear/set initial variables (messy)
+unset raws
+unset photos
+unset watermarks
 photographer=$1
 
 main() {
-	#messy main loop, needs organization
-	# ensure that required directories exist
+	# messy main loop, needs organization
+
+    # ensure that required directories exist
 	required_dirs=(.working_dir processed original)
 	for dir in "${required_dirs[@]}";
 	do
 		if [ ! -d $dir ]
 			mkdir -p $dir/
-			then echo "##### $dir required, so it was created #####" >> $log
-		else
-			echo "##### $dir exists #####" >> $log
+			then echo "##### $dir required, so it was created #####"
 		fi
 	done
-	raws=$(getRaws)
+	
+    raws=$(getRaws)
 	for source in $raws; #convert all NEF files to .png
 	do
 		convertRAW $source
@@ -108,26 +109,12 @@ main() {
 	photos=$(getPhotos)
 	watermarks=$(getWatermarks)
 
-	echo "		Photos to be processed:" >> $log
 	for photo in $photos;
 	do
-		echo $photo >> $log # list all photos to be processed
-	done
-	echo "		Watermarks to be processed:" >> $log
-	for watermark in $watermarks;
-	do
-		echo $watermark >> $log #list all watermarks to be applied
-	done
-
-	for photo in $photos;
-	do
-		echo "		***** $photo processing started *****" >> $log
 		processWeb $photo #process for the web
 		processPrint $photos #process for print
-		echo "		***** $photo | processing complete *****" >> $log
 	done
 
-	echo '##### Core processing complete for all photos, cleanup in progress.#####' >> $log
 	housekeeping
 }
 
